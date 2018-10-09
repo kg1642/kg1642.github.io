@@ -45,7 +45,7 @@ function getPopularMovies(){
                         review_url = getReviews(result.results[j].title);
                         result.results[j]['review_url'] = review_url
                         if (review_url !=null){
-                            result.results[j].overview = result.results[j].overview +"<br><b>Read NYT Review</b><br><a href = '"+review_url+"' target = '_blank'><img src ='images/NYTLogo.jpg' class = 'nyt-image'></a>";
+                            result.results[j].overview = result.results[j].overview +"<br><b>Read NYT Review</b><br><a href = '"+review_url+"' target = '_blank'><img src ='NYTLogo.jpg' class = 'nyt-image'></a>";
                          }
                         movies.push(result.results[j])
                     }
