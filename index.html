@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>What's the World Watching Right Now?</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+      <script src="https://d3js.org/d3.v5.min.js"></script>
+      <script src = 'd3-legend.min.js'></script>
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+      <link href="https://fonts.googleapis.com/css?family=Annie+Use+Your+Telescope|Bungee|Loved+by+the+King|Shojumaru|Special+Elite" rel="stylesheet">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+      <script src = 'index.js'></script>
+      <style>
+          html, body{
+              padding: 0;
+              margin: 0;
+              box-sizing: border-box;
+              font-family: Helvetica, Calibri, Roboto, Open Sans, sans-serif;
+              /*overflow: hidden;*/
+              -webkit-backface-visibility: hidden;
+          }
+          body::after{
+              background: url('background9.jpg') no-repeat center top;
+              content: "";
+              opacity: 0.5;
+              position: absolute;
+              top: 0;
+              bottom: 0;
+              right: 0;
+              left: 0;
+              z-index: -1;
+              background-size: cover;
+          }
+          .glyphicon {
+              font-size: 30px;
+          }
+          #img.source-image {
+              width: 100%;
+              position: absolute;
+              top: 0;
+              left: 0;
+          }
+          * {
+              box-sizing: inherit;
+          }
+
+          .nyt-image {
+              height: 50px;
+              width : 50px;
+          }
+          h1 {
+              font-family: 'Special Elite', cursive;
+              font-size: 50px;
+              word-wrap: break-word;
+              text-align: center;
+          }
+          h2 {
+              font-family: 'Special Elite', cursive;
+              font-size: 20px;
+              word-wrap: break-word;
+              text-align: center;
+          }
+          svg {
+              /*margin-left: 10%;*/
+              margin-top: 0%;
+              display:block;
+              stroke-opacity:0;
+          }
+          .titleBox {
+              color: white;
+          }
+          .circle-overlay {
+              font-size: 16px;
+              /*border-radius: 100%;*/
+              position: absolute;
+              color: white;
+              /*it's buggy with the foreignObject background right now*/
+              /*background-color: rgba(255,255,255,0.5);*/
+          }
+
+          .circle-overlay__inner {
+              /*border-radius: 100%;*/
+              text-align: center;
+              width: 100%;
+              height: 100%;
+              vertical-align: middle;
+              overflow:scroll;
+              font-size:20px;
+              font-weight:bold;
+              font-family: 'Annie Use Your Telescope';
+          }
+
+          .circle-overlay__title{
+              font-size : 25px;
+          }
+          .hidden {
+              display: none;
+          }
+          .node-icon--faded {
+              opacity: 0.3;
+          }
+          .legend-size circle {
+              fill: rgb(31, 119, 180);
+          }
+      </style>
+
+  </head>
+  <body>
+  <div class = "container">
+  <div class = "row">
+    <div class = "col-lg-12 col-md-12 col-sm-12">
+        <h1>What's the World Watching Right Now?</h1>
+    </div>
+      <!--<div class = "col-lg-1 col-md-1 col-sm-1">-->
+            <!--<a href="#myModal" data-toggle="modal" data-target="#myModal">-->
+                <!--<span class="glyphicon glyphicon-info-sign"></span>-->
+            <!--</a>-->
+      <!--</div>-->
+  </div>
+      <div class = "row">
+          <div class = "col-lg-12 col-md-12 col-sm-12">
+  <svg width ="100%" font-family="sans-serif" font-size="10" text-anchor="middle"></svg>
+  <!--
+  <div class="modal" id = 'myModal' tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+          <div class="modal-content">
+              <div class="modal-body">
+                  <p>The information about the movies shown were colleccted from MovieDB Api.</p>
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              </div>
+          </div>
+      </div>
+  </div>
+  -->
+          </div>
+      </div>
+  </div>
+  </body>
+</html>
