@@ -21,7 +21,7 @@
               -webkit-backface-visibility: hidden;
           }
           body::after{
-              background: url('background9.jpg') no-repeat center top;
+              background: url('background9.jpg') no-repeat center center fixed;
               content: "";
               opacity: 0.5;
               position: absolute;
@@ -31,6 +31,9 @@
               left: 0;
               z-index: -1;
               background-size: cover;
+              -webkit-background-size: cover;
+             -moz-background-size: cover;
+              -o-background-size: cover;
           }
           .glyphicon {
               font-size: 30px;
@@ -112,13 +115,32 @@
     <div class = "col-lg-12 col-md-12 col-sm-12">
         <h1>What's the World Watching Right Now?</h1>
     </div>
-      <!--<div class = "col-lg-1 col-md-1 col-sm-1">-->
-            <!--<a href="#myModal" data-toggle="modal" data-target="#myModal">-->
-                <!--<span class="glyphicon glyphicon-info-sign"></span>-->
-            <!--</a>-->
-      <!--</div>-->
+    <div>
+          <select class="form-control" id="sel1" name ='genre_select' onchange="genre_changed(this.value)">
+            <option value="" selected disabled hidden>Select Genre Of The Movies</option>
+            <option value ='Comedy'>Comedy</option>
+            <option value ='Action'>Action</option>
+            <option value ='Adventure'>Adventure</option>
+            <option value ='Animation'>Animation</option>
+            <option value ='Crime'>Crime</option>
+            <option value ='Documentary'>Documentary</option>
+            <option value ='Drama'>Drama</option>
+            <option value ='Family'>Family</option>
+            <option value ='Fantasy'>Fantasy</option>
+            <option value ='History'>History</option>
+            <option value ='Horror'>Horror</option>
+            <option value ='Music'>Music</option>
+            <option value ='Mystery'>Mystery</option>
+            <option value ='Romance'>Romance</option>
+            <option value ='Science Fiction'>Science Fiction</option>
+            <option value ='Thriller'>Thriller</option>
+            <option value ='TV Movie'>TV Movie</option>
+            <option value ='War'>War</option>
+            <option value ='Western'>Western</option>
+          </select>
+    </div>
   </div>
-      <div class = "row">
+  <div class = "row">
           <div class = "col-lg-12 col-md-12 col-sm-12">
   <svg width ="100%" font-family="sans-serif" font-size="10" text-anchor="middle"></svg>
   <!--

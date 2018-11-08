@@ -3,65 +3,88 @@
 //     var
 // }
 
+movie_genre_ids = {
+    'Action':28,
+    'Adventure':12,
+    'Animation':16,
+    'Comedy':35,
+    'Crime': 80,
+    'Documentary': 99,
+    'Drama': 18,
+    'Family': 10751,
+    'Fantasy': 14,
+    'Horror': 27,
+    'Music': 10402,
+    'Mystery': 9648,
+    'Romance':10749,
+    'Science Fiction': 878,
+    'TV Movie': 10770,
+    'Thriller': 53,
+    'War': 10752,
+    'Western': 37
+};
 
 //is not implemented at the moment. just returning false
 function same_movie_list(result){
-    return false
+    return false;
     var local_saved_movie_list = [];
     fetch('images/movies.json')
         .then(response => response.json())
         .then(json => local_saved_movie_list = json);
     console.log(local_saved_movie_list);
-    console.log(result.results)
+    console.log(result.results);
     if (local_saved_movie_list === result.results){
         return true;
     }
-    else{
+    else {
         return false;
     }
 }
 
-function getPopularMovies(){
+function getPopularMovies(num_movies, genre_name){
+    var url = 'https://api.themoviedb.org/3/movie/popular?api_key=b0cf07fad30a440f2c6f0070428f2dd6&language=en-US&page=';
+    genre_id = null;
+    if (genre_name!= null){
+        genre_id = movie_genre_ids[genre_name];
+    }
+    return getMovies(num_movies, url, genre_id);
+}
+
+function getMovies(num_movies, url, genre_id){
     var movies = [];
-    var url = 'https://api.themoviedb.org/3/movie/popular?api_key=b0cf07fad30a440f2c6f0070428f2dd6&language=en-US&page='
-    for (i=1; i<4; i++){
+    i = 0;
+    while (movies.length < num_movies ){
+        i=i+1;
         $.ajax({
             url: url + i,
             method: 'get',
             async : false,
             dataType: 'json',
             error: function (err){
-                console.log(err)
+                console.log(err);
             },
             success : function (result){
-                if (same_movie_list(result)){
-                    fetch('images/moviesWithURL.json')
-                        .then(response => response.json())
-                        .then(json => movies = json);
-                }
-                else {
                     for (j = 0; j < result.results.length; j++) {
-                        review_url = null;
-                        review_url = getReviews(result.results[j].title);
-                        result.results[j]['review_url'] = review_url
-                        if (review_url !=null){
-                            result.results[j].overview = result.results[j].overview +"<br><b>Read NYT Review</b><br><a href = '"+review_url+"' target = '_blank'><img src ='NYTLogo.jpg' class = 'nyt-image'></a>";
-                         }
-                        movies.push(result.results[j])
+                        if (genre_id != null && result.results[j].genre_ids.includes(genre_id)){
+                            movies.push(result.results[j]);
+                        }
+                        else if (genre_id === null){
+                            movies.push(result.results[j]);
+                        }
                     }
-                    //var a = document.createElement("a");
-                    //var file = new Blob([movies], {type: 'text/plain'});
-                    //a.href = URL.createObjectURL(file);
-                    //a.download = 'images/moviesWithURL.json';
-                    //a.click();
+                    console.log(movies.length);
                 }
-            }
-        })
+        });
     }
     //console.log(movies);
     //console.log('Review link', getReviews('Avengers: Infinity War'));
     //makeData(movies)
     return movies;
+}
+
+function getActionMovies(num_movies){
+    var url = 'https://api.themoviedb.org/3/movie/popular?api_key=b0cf07fad30a440f2c6f0070428f2dd6&language=en-US&page=';
+    return getMovies(num_movies, url, 28);
 }
 
 function getReviews(movie_name){
@@ -104,7 +127,7 @@ function getMaxMin(popular_movies){
             min_value = popular_movies[i].popularity
         }
     }
-    return [min_value, max_value]
+    return [min_value, max_value];
 }
 
 function createDataListForD3(popular_movies, max_min_value){
@@ -118,18 +141,34 @@ function createDataListForD3(popular_movies, max_min_value){
             icon : 'https://image.tmdb.org/t/p/original' + popular_movies[i].poster_path,
             desc: popular_movies[i].overview,
             cat : popular_movies[i].genre_ids[0]
-        }
-        data_list_for_D3.push(movie_dict)
+        };
+        data_list_for_D3.push(movie_dict);
     }
     return data_list_for_D3;
 }
 
-$(document).ready(function (){
 
+//window.onload
+// $(document).ready(function (){
+
+function genre_changed(genre_name){
+    console.log('genre changed function ran');
+    genre_name_selected = genre_name;
+    init();
+}
+
+genre_name_selected = null;
+window.onload = init;
+
+function init(){
     console.log('Document is ready!');
-    popular_movies = getPopularMovies();
+    popular_movies = getPopularMovies(60, genre_name_selected);
+    //popular_movies = getActionMovies(60);
     console.log(popular_movies);
     max_min_value = getMaxMin(popular_movies);
+
+
+    //d3 code inspired from https://github.com/naustudio/techstack/blob/master/index.html. 
 
     //creating that has to be sent to d3 for visualiazation. It is in json format.
     data = createDataListForD3(popular_movies, max_min_value);
@@ -137,13 +176,19 @@ $(document).ready(function (){
 
     //creating a svg and initializing variables
     let svg = d3.select('svg');
+    svg.selectAll("*").remove();
     let width = document.body.clientWidth; // get width in pixels
+    //width = 1000;
+    //winHeight = 750;
     winHeight = window.innerHeight * 0.85;
     console.log(winHeight)
     //svg.setAttribute("height", winHeight);
     svg.attr('height', winHeight);
     //document.getElementsByTagName('svg').setAttribute.height  = winHeight;
     let height = +svg.attr('height');
+    svg.attr("preserveAspectRatio", "xMinYMin meet");
+    svg.attr("viewBox", "0 0 800 650");
+    //let height = winHeight;
     let centerX = width * 0.5;
     let centerY = height * 0.5;
     let strength = 0.05; //0.05
@@ -284,6 +329,7 @@ $(document).ready(function (){
         .classed('circle-overlay__title', true)
         .text(d => d.name);
     infoBox.append('p')
+        .attr('id', d => d.id)
         .classed('circle-overlay__body', true)
         .html(d => d.desc);
     let titleBox = node.append('foreignObject')
@@ -302,10 +348,16 @@ $(document).ready(function (){
     //displays the movie title and description
 
     node.on('click', (currentNodeClicked) => { //click
-        console.log('was clicked');
+        console.log('currentNode', currentNodeClicked.name);
+        review_url = getReviews(currentNodeClicked.name)
+        if (review_url != null){
+            currentNodeClicked_desc = currentNodeClicked.desc +"<br><b>Read NYT Review</b><br><a href = '"+review_url+"' target = '_blank'><img src ='NYTLogo.jpg' class = 'nyt-image'></a>";
+            //console.log(currentNodeClicked.desc);
+            desc_id = "p[id='"+currentNodeClicked.id+"']";
+            d3.select(desc_id).html(currentNodeClicked_desc);
+        }
+
         d3.event.stopPropagation();
-        console.log('currentNode', currentNodeClicked);
-        //d3.selectAll('.titleBox').classed('hidden', true);
         let currentTargetClicked = d3.event.currentTarget; // the <g> el
         if (currentNodeClicked === focusedNodeClicked) {
             // if same node is clicked do nothing
@@ -389,7 +441,7 @@ $(document).ready(function (){
         if (focusedNodeClicked){
             //focusedNodeClicked.select()
             //focusedNodeClicked.select('.node-icon').classed('node-icon--faded', false);
-            d3.select(this).select('.node-icon').classed('node-icon--faded', true);
+            //d3.select(this).select('.node-icon').classed('node-icon--faded', true);
         }
         d3.selectAll('.titleBox').classed('hidden', true);
         d3.selectAll('.node-icon').classed('node-icon--faded', false);
@@ -527,4 +579,6 @@ $(document).ready(function (){
             .select('circle')
             .attr('r', d => d.r);
     }
-});
+
+}
+
